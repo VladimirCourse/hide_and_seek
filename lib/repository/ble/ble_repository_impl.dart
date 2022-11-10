@@ -36,12 +36,15 @@ class BLERepositoryImpl extends BLERepository {
   final String deviceId = Random().nextInt(0xffffff).toRadixString(16);
 
   @override
+  bool get isScanning => _isScanning;
+
+  @override
   Stream<List<DeviceModel>> get devices => _devicesSubject.stream;
 
   @override
-  Future<void> startScan() async {
+  Future<void> startScan({ErrorCallback? onError}) async {
     if (!_isScanning) {
-      _isScanning = true;
+      _subscription?.cancel();
 
       _subscription = _flutterBlue.scanResults.listen((results) {
         final devices = results
@@ -50,7 +53,6 @@ class BLERepositoryImpl extends BLERepository {
           final defaultId = (e.device.id.hashCode % 1000000).toRadixString(16).padLeft(6, '0');
           final fullId = e.advertisementData.serviceUuids.firstOrNull ?? defaultId;
           final id = fullId.substring(fullId.length - 6);
-
           final name = e.advertisementData.localName.trim();
 
           return DeviceModel(
@@ -59,11 +61,17 @@ class BLERepositoryImpl extends BLERepository {
             name: name.isNotEmpty ? name : id,
           );
         }).toList();
-        // print(_devicesSubject.value);
+
         _devicesSubject.add(devices);
       });
+      _isScanning = true;
 
-      _flutterBlue.startScan(timeout: const Duration(minutes: 5), allowDuplicates: true);
+      _flutterBlue.startScan(timeout: const Duration(minutes: 5), allowDuplicates: true).onError(
+        (error, stackTrace) {
+          _isScanning = false;
+          onError?.call();
+        },
+      );
     }
   }
 

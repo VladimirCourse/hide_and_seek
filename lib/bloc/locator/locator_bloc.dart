@@ -20,25 +20,48 @@ class LocatorBloc extends Bloc<LocatorEvent, LocatorState> {
 
   LocatorBloc({
     required this.repository,
-  }) : super(const LocatorState.data()) {
-    _subscription = repository.devices.listen((devices) => _devices = devices);
+  }) : super(const LocatorState()) {
+    _subscription = repository.devices.listen(
+      (devices) => _devices = devices..sort((d1, d2) => d1.signal.compareTo(d2.signal)),
+    );
 
     on<_StartScan>(_handleStartScan);
+    on<_StopScan>(_handleStopScan);
     on<_RefreshDevices>(_handleRefreshDevices);
   }
 
   void _handleStartScan(_StartScan event, Emitter<LocatorState> emit) async {
-    repository.startScan();
+    try {
+      await repository.startScan(onError: event.onError);
+
+      emit(LocatorState(isScanning: repository.isScanning, devices: _devices));
+    } catch (ex) {
+      event.onError?.call();
+    }
+  }
+
+  void _handleStopScan(_StopScan event, Emitter<LocatorState> emit) async {
+    try {
+      await repository.stopScan();
+
+      _devices = [];
+
+      emit(LocatorState(isScanning: repository.isScanning));
+    } catch (ex) {
+      event.onError?.call();
+    }
   }
 
   void _handleRefreshDevices(_RefreshDevices event, Emitter<LocatorState> emit) async {
-    print(_devices);
-    emit(LocatorState.data(devices: _devices..sort((d1, d2) => d1.signal.compareTo(d2.signal))));
+    emit(
+      LocatorState(isScanning: repository.isScanning, devices: _devices),
+    );
   }
 
   @override
   Future<void> close() async {
     await _subscription?.cancel();
+    await repository.stopScan();
 
     super.close();
   }

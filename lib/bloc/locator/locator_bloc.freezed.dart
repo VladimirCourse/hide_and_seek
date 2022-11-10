@@ -19,22 +19,22 @@ mixin _$LocatorEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() refreshDevices,
-    required TResult Function() startScan,
-    required TResult Function() stopScan,
+    required TResult Function(ErrorCallback? onError) startScan,
+    required TResult Function(ErrorCallback? onError) stopScan,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? refreshDevices,
-    TResult? Function()? startScan,
-    TResult? Function()? stopScan,
+    TResult? Function(ErrorCallback? onError)? startScan,
+    TResult? Function(ErrorCallback? onError)? stopScan,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? refreshDevices,
-    TResult Function()? startScan,
-    TResult Function()? stopScan,
+    TResult Function(ErrorCallback? onError)? startScan,
+    TResult Function(ErrorCallback? onError)? stopScan,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -119,8 +119,8 @@ class _$_RefreshDevices implements _RefreshDevices {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() refreshDevices,
-    required TResult Function() startScan,
-    required TResult Function() stopScan,
+    required TResult Function(ErrorCallback? onError) startScan,
+    required TResult Function(ErrorCallback? onError) stopScan,
   }) {
     return refreshDevices();
   }
@@ -129,8 +129,8 @@ class _$_RefreshDevices implements _RefreshDevices {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? refreshDevices,
-    TResult? Function()? startScan,
-    TResult? Function()? stopScan,
+    TResult? Function(ErrorCallback? onError)? startScan,
+    TResult? Function(ErrorCallback? onError)? stopScan,
   }) {
     return refreshDevices?.call();
   }
@@ -139,8 +139,8 @@ class _$_RefreshDevices implements _RefreshDevices {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? refreshDevices,
-    TResult Function()? startScan,
-    TResult Function()? stopScan,
+    TResult Function(ErrorCallback? onError)? startScan,
+    TResult Function(ErrorCallback? onError)? stopScan,
     required TResult orElse(),
   }) {
     if (refreshDevices != null) {
@@ -193,6 +193,8 @@ abstract class _$$_StartScanCopyWith<$Res> {
   factory _$$_StartScanCopyWith(
           _$_StartScan value, $Res Function(_$_StartScan) then) =
       __$$_StartScanCopyWithImpl<$Res>;
+  @useResult
+  $Res call({ErrorCallback? onError});
 }
 
 /// @nodoc
@@ -202,57 +204,81 @@ class __$$_StartScanCopyWithImpl<$Res>
   __$$_StartScanCopyWithImpl(
       _$_StartScan _value, $Res Function(_$_StartScan) _then)
       : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? onError = freezed,
+  }) {
+    return _then(_$_StartScan(
+      onError: freezed == onError
+          ? _value.onError
+          : onError // ignore: cast_nullable_to_non_nullable
+              as ErrorCallback?,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$_StartScan implements _StartScan {
-  const _$_StartScan();
+  const _$_StartScan({this.onError});
+
+  @override
+  final ErrorCallback? onError;
 
   @override
   String toString() {
-    return 'LocatorEvent.startScan()';
+    return 'LocatorEvent.startScan(onError: $onError)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_StartScan);
+        (other.runtimeType == runtimeType &&
+            other is _$_StartScan &&
+            (identical(other.onError, onError) || other.onError == onError));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, onError);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_StartScanCopyWith<_$_StartScan> get copyWith =>
+      __$$_StartScanCopyWithImpl<_$_StartScan>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() refreshDevices,
-    required TResult Function() startScan,
-    required TResult Function() stopScan,
+    required TResult Function(ErrorCallback? onError) startScan,
+    required TResult Function(ErrorCallback? onError) stopScan,
   }) {
-    return startScan();
+    return startScan(onError);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? refreshDevices,
-    TResult? Function()? startScan,
-    TResult? Function()? stopScan,
+    TResult? Function(ErrorCallback? onError)? startScan,
+    TResult? Function(ErrorCallback? onError)? stopScan,
   }) {
-    return startScan?.call();
+    return startScan?.call(onError);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? refreshDevices,
-    TResult Function()? startScan,
-    TResult Function()? stopScan,
+    TResult Function(ErrorCallback? onError)? startScan,
+    TResult Function(ErrorCallback? onError)? stopScan,
     required TResult orElse(),
   }) {
     if (startScan != null) {
-      return startScan();
+      return startScan(onError);
     }
     return orElse();
   }
@@ -293,7 +319,12 @@ class _$_StartScan implements _StartScan {
 }
 
 abstract class _StartScan implements LocatorEvent {
-  const factory _StartScan() = _$_StartScan;
+  const factory _StartScan({final ErrorCallback? onError}) = _$_StartScan;
+
+  ErrorCallback? get onError;
+  @JsonKey(ignore: true)
+  _$$_StartScanCopyWith<_$_StartScan> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -301,6 +332,8 @@ abstract class _$$_StopScanCopyWith<$Res> {
   factory _$$_StopScanCopyWith(
           _$_StopScan value, $Res Function(_$_StopScan) then) =
       __$$_StopScanCopyWithImpl<$Res>;
+  @useResult
+  $Res call({ErrorCallback? onError});
 }
 
 /// @nodoc
@@ -310,57 +343,81 @@ class __$$_StopScanCopyWithImpl<$Res>
   __$$_StopScanCopyWithImpl(
       _$_StopScan _value, $Res Function(_$_StopScan) _then)
       : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? onError = freezed,
+  }) {
+    return _then(_$_StopScan(
+      onError: freezed == onError
+          ? _value.onError
+          : onError // ignore: cast_nullable_to_non_nullable
+              as ErrorCallback?,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$_StopScan implements _StopScan {
-  const _$_StopScan();
+  const _$_StopScan({this.onError});
+
+  @override
+  final ErrorCallback? onError;
 
   @override
   String toString() {
-    return 'LocatorEvent.stopScan()';
+    return 'LocatorEvent.stopScan(onError: $onError)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_StopScan);
+        (other.runtimeType == runtimeType &&
+            other is _$_StopScan &&
+            (identical(other.onError, onError) || other.onError == onError));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, onError);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_StopScanCopyWith<_$_StopScan> get copyWith =>
+      __$$_StopScanCopyWithImpl<_$_StopScan>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() refreshDevices,
-    required TResult Function() startScan,
-    required TResult Function() stopScan,
+    required TResult Function(ErrorCallback? onError) startScan,
+    required TResult Function(ErrorCallback? onError) stopScan,
   }) {
-    return stopScan();
+    return stopScan(onError);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? refreshDevices,
-    TResult? Function()? startScan,
-    TResult? Function()? stopScan,
+    TResult? Function(ErrorCallback? onError)? startScan,
+    TResult? Function(ErrorCallback? onError)? stopScan,
   }) {
-    return stopScan?.call();
+    return stopScan?.call(onError);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? refreshDevices,
-    TResult Function()? startScan,
-    TResult Function()? stopScan,
+    TResult Function(ErrorCallback? onError)? startScan,
+    TResult Function(ErrorCallback? onError)? stopScan,
     required TResult orElse(),
   }) {
     if (stopScan != null) {
-      return stopScan();
+      return stopScan(onError);
     }
     return orElse();
   }
@@ -401,48 +458,21 @@ class _$_StopScan implements _StopScan {
 }
 
 abstract class _StopScan implements LocatorEvent {
-  const factory _StopScan() = _$_StopScan;
+  const factory _StopScan({final ErrorCallback? onError}) = _$_StopScan;
+
+  ErrorCallback? get onError;
+  @JsonKey(ignore: true)
+  _$$_StopScanCopyWith<_$_StopScan> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 mixin _$LocatorState {
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(List<DeviceModel> devices) data,
-    required TResult Function() error,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(List<DeviceModel> devices)? data,
-    TResult? Function()? error,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(List<DeviceModel> devices)? data,
-    TResult Function()? error,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Data value) data,
-    required TResult Function(_Error value) error,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Data value)? data,
-    TResult? Function(_Error value)? error,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Data value)? data,
-    TResult Function(_Error value)? error,
-    required TResult orElse(),
-  }) =>
+  List<DeviceModel> get devices => throw _privateConstructorUsedError;
+  bool get isScanning => throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $LocatorStateCopyWith<LocatorState> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -451,6 +481,8 @@ abstract class $LocatorStateCopyWith<$Res> {
   factory $LocatorStateCopyWith(
           LocatorState value, $Res Function(LocatorState) then) =
       _$LocatorStateCopyWithImpl<$Res, LocatorState>;
+  @useResult
+  $Res call({List<DeviceModel> devices, bool isScanning});
 }
 
 /// @nodoc
@@ -462,41 +494,69 @@ class _$LocatorStateCopyWithImpl<$Res, $Val extends LocatorState>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? devices = null,
+    Object? isScanning = null,
+  }) {
+    return _then(_value.copyWith(
+      devices: null == devices
+          ? _value.devices
+          : devices // ignore: cast_nullable_to_non_nullable
+              as List<DeviceModel>,
+      isScanning: null == isScanning
+          ? _value.isScanning
+          : isScanning // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ) as $Val);
+  }
 }
 
 /// @nodoc
-abstract class _$$_DataCopyWith<$Res> {
-  factory _$$_DataCopyWith(_$_Data value, $Res Function(_$_Data) then) =
-      __$$_DataCopyWithImpl<$Res>;
+abstract class _$$_LocatorStateCopyWith<$Res>
+    implements $LocatorStateCopyWith<$Res> {
+  factory _$$_LocatorStateCopyWith(
+          _$_LocatorState value, $Res Function(_$_LocatorState) then) =
+      __$$_LocatorStateCopyWithImpl<$Res>;
+  @override
   @useResult
-  $Res call({List<DeviceModel> devices});
+  $Res call({List<DeviceModel> devices, bool isScanning});
 }
 
 /// @nodoc
-class __$$_DataCopyWithImpl<$Res>
-    extends _$LocatorStateCopyWithImpl<$Res, _$_Data>
-    implements _$$_DataCopyWith<$Res> {
-  __$$_DataCopyWithImpl(_$_Data _value, $Res Function(_$_Data) _then)
+class __$$_LocatorStateCopyWithImpl<$Res>
+    extends _$LocatorStateCopyWithImpl<$Res, _$_LocatorState>
+    implements _$$_LocatorStateCopyWith<$Res> {
+  __$$_LocatorStateCopyWithImpl(
+      _$_LocatorState _value, $Res Function(_$_LocatorState) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? devices = null,
+    Object? isScanning = null,
   }) {
-    return _then(_$_Data(
+    return _then(_$_LocatorState(
       devices: null == devices
           ? _value._devices
           : devices // ignore: cast_nullable_to_non_nullable
               as List<DeviceModel>,
+      isScanning: null == isScanning
+          ? _value.isScanning
+          : isScanning // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
 
 /// @nodoc
 
-class _$_Data implements _Data {
-  const _$_Data({final List<DeviceModel> devices = const []})
+class _$_LocatorState implements _LocatorState {
+  const _$_LocatorState(
+      {final List<DeviceModel> devices = const [], this.isScanning = false})
       : _devices = devices;
 
   final List<DeviceModel> _devices;
@@ -508,195 +568,46 @@ class _$_Data implements _Data {
   }
 
   @override
+  @JsonKey()
+  final bool isScanning;
+
+  @override
   String toString() {
-    return 'LocatorState.data(devices: $devices)';
+    return 'LocatorState(devices: $devices, isScanning: $isScanning)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Data &&
-            const DeepCollectionEquality().equals(other._devices, _devices));
+            other is _$_LocatorState &&
+            const DeepCollectionEquality().equals(other._devices, _devices) &&
+            (identical(other.isScanning, isScanning) ||
+                other.isScanning == isScanning));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_devices));
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(_devices), isScanning);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_DataCopyWith<_$_Data> get copyWith =>
-      __$$_DataCopyWithImpl<_$_Data>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(List<DeviceModel> devices) data,
-    required TResult Function() error,
-  }) {
-    return data(devices);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(List<DeviceModel> devices)? data,
-    TResult? Function()? error,
-  }) {
-    return data?.call(devices);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(List<DeviceModel> devices)? data,
-    TResult Function()? error,
-    required TResult orElse(),
-  }) {
-    if (data != null) {
-      return data(devices);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Data value) data,
-    required TResult Function(_Error value) error,
-  }) {
-    return data(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Data value)? data,
-    TResult? Function(_Error value)? error,
-  }) {
-    return data?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Data value)? data,
-    TResult Function(_Error value)? error,
-    required TResult orElse(),
-  }) {
-    if (data != null) {
-      return data(this);
-    }
-    return orElse();
-  }
+  _$$_LocatorStateCopyWith<_$_LocatorState> get copyWith =>
+      __$$_LocatorStateCopyWithImpl<_$_LocatorState>(this, _$identity);
 }
 
-abstract class _Data implements LocatorState {
-  const factory _Data({final List<DeviceModel> devices}) = _$_Data;
+abstract class _LocatorState implements LocatorState {
+  const factory _LocatorState(
+      {final List<DeviceModel> devices,
+      final bool isScanning}) = _$_LocatorState;
 
+  @override
   List<DeviceModel> get devices;
+  @override
+  bool get isScanning;
+  @override
   @JsonKey(ignore: true)
-  _$$_DataCopyWith<_$_Data> get copyWith => throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class _$$_ErrorCopyWith<$Res> {
-  factory _$$_ErrorCopyWith(_$_Error value, $Res Function(_$_Error) then) =
-      __$$_ErrorCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$_ErrorCopyWithImpl<$Res>
-    extends _$LocatorStateCopyWithImpl<$Res, _$_Error>
-    implements _$$_ErrorCopyWith<$Res> {
-  __$$_ErrorCopyWithImpl(_$_Error _value, $Res Function(_$_Error) _then)
-      : super(_value, _then);
-}
-
-/// @nodoc
-
-class _$_Error implements _Error {
-  const _$_Error();
-
-  @override
-  String toString() {
-    return 'LocatorState.error()';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_Error);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(List<DeviceModel> devices) data,
-    required TResult Function() error,
-  }) {
-    return error();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(List<DeviceModel> devices)? data,
-    TResult? Function()? error,
-  }) {
-    return error?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(List<DeviceModel> devices)? data,
-    TResult Function()? error,
-    required TResult orElse(),
-  }) {
-    if (error != null) {
-      return error();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Data value) data,
-    required TResult Function(_Error value) error,
-  }) {
-    return error(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Data value)? data,
-    TResult? Function(_Error value)? error,
-  }) {
-    return error?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Data value)? data,
-    TResult Function(_Error value)? error,
-    required TResult orElse(),
-  }) {
-    if (error != null) {
-      return error(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _Error implements LocatorState {
-  const factory _Error() = _$_Error;
+  _$$_LocatorStateCopyWith<_$_LocatorState> get copyWith =>
+      throw _privateConstructorUsedError;
 }

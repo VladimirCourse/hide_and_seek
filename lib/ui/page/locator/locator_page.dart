@@ -1,14 +1,11 @@
-import 'dart:async';
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hide_and_seek/bloc/locator/locator_bloc.dart';
 import 'package:hide_and_seek/model/device_model.dart';
-import 'package:hide_and_seek/repository/ble/ble_repository.dart';
-import 'package:hide_and_seek/ui/page/locator/widgets/locator_radar_painter.dart';
+import 'package:hide_and_seek/ui/page/locator/widgets/locator_chart_widget.dart';
 import 'package:hide_and_seek/ui/page/locator/widgets/locator_radar_widget.dart';
-import 'package:hide_and_seek/ui/page/locator/widgets/locator_stats_widget.dart';
-import 'package:hide_and_seek/ui/util/app_button_styles.dart';
+import 'package:hide_and_seek/ui/util/app_colors.dart';
 import 'package:provider/provider.dart';
 
 class LocatorPage extends StatelessWidget {
@@ -19,53 +16,98 @@ class LocatorPage extends StatelessWidget {
   }
 
   void _startScan(BuildContext context) {
-    context.read<LocatorBloc>().add(const LocatorEvent.startScan());
+    context.read<LocatorBloc>().add(LocatorEvent.startScan(onError: () => _showError(context)));
   }
 
   void _stopScan(BuildContext context) {
-    context.read<LocatorBloc>().add(const LocatorEvent.stopScan());
+    context.read<LocatorBloc>().add(LocatorEvent.stopScan(onError: () => _showError(context)));
+  }
+
+  void _showDeviceInfo(BuildContext context, DeviceModel device) {
+    final snackBar = SnackBar(
+      content: Text(
+        'id: ${device.id}\nимя: ${device.name}\nрасстояние: ${device.distance} м\nсигнал: ${device.signal}',
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  void _showError(BuildContext context) {
+    _refreshDevices(context);
+
+    const snackBar = SnackBar(
+      content: Text(
+        'Ошибочка:( Пожалуйста, проверьте, что BT включен, приложение получило все необходимые разрешения и попробуйте снова',
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Локатор'),
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(height: 20),
-              BlocBuilder<LocatorBloc, LocatorState>(
-                builder: (_, state) => state.maybeMap(
-                  data: (state) => LocatorRadarWidget(
+      child: DecoratedBox(
+        decoration: const BoxDecoration(gradient: AppColors.pageGradient),
+        child: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            title: const Text('Локатор'),
+          ),
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(height: 20),
+                BlocBuilder<LocatorBloc, LocatorState>(
+                  builder: (_, state) => LocatorRadarWidget(
+                    isScanning: state.isScanning,
                     devices: state.devices,
                     onRefresh: () => _refreshDevices(context),
                   ),
-                  orElse: () => const SizedBox(),
                 ),
-              ),
-              BlocBuilder<LocatorBloc, LocatorState>(
-                builder: (_, state) => state.maybeMap(
-                  data: (state) => LocatorChartWidget(devices: state.devices),
-                  orElse: () => const SizedBox(),
+                BlocBuilder<LocatorBloc, LocatorState>(
+                  builder: (_, state) => LocatorChartWidget(
+                    devices: state.devices,
+                    onDevicePressed: (device) => _showDeviceInfo(context, device),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 60),
-              ElevatedButton(
-                style: AppButtonStyles.main,
-                onPressed: () => _startScan(context),
-                child: const Text('Сканировать'),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                style: AppButtonStyles.main,
-                onPressed: () => _stopScan(context),
-                child: const Text('Остановить'),
-              ),
-              const SizedBox(height: 20)
-            ],
+                const SizedBox(height: 60),
+                BlocBuilder<LocatorBloc, LocatorState>(
+                  builder: (_, state) => Column(
+                    children: [
+                      Transform.scale(
+                        scale: 2.0,
+                        child: CupertinoSwitch(
+                          value: state.isScanning,
+                          activeColor: AppColors.radar,
+                          trackColor: Colors.white,
+                          // inactiveTrackColor: Colors.grey,
+                          onChanged: (value) => value ? _startScan(context) : _stopScan(context),
+                        ),
+                      ),
+                      const SizedBox(height: 34),
+                      Text(
+                        state.isScanning ? 'Выключить сканирование' : 'Включить сканирование',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // PrimaryButton.accept(
+                //   onPressed: () => _startScan(context),
+                //   title: 'Сканировать',
+                // ),
+                // const SizedBox(height: 20),
+                // PrimaryButton.cancel(
+                //   onPressed: () => _stopScan(context),
+                //   title: 'Остановить',
+                // ),
+                const SizedBox(height: 20)
+              ],
+            ),
           ),
         ),
       ),

@@ -6,9 +6,11 @@ import 'package:hide_and_seek/ui/util/app_colors.dart';
 
 class LocatorRadarPainter extends CustomPainter {
   final double angle;
+  final bool isScanning;
   final List<DeviceModel> devices;
 
   LocatorRadarPainter({
+    required this.isScanning,
     required this.angle,
     required this.devices,
   });
@@ -16,7 +18,7 @@ class LocatorRadarPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = AppColors.primary
+      ..color = AppColors.radar
       ..strokeWidth = 1
       ..style = PaintingStyle.stroke;
 
@@ -25,37 +27,40 @@ class LocatorRadarPainter extends CustomPainter {
     final center = Offset(size.width * 0.5, size.height * 0.5);
 
     for (int i = 0; i < 4; i++) {
+      paint.maskFilter = const MaskFilter.blur(BlurStyle.normal, 5);
+      canvas.drawCircle(center, radius - dradius * i, paint);
+      paint.maskFilter = null;
       canvas.drawCircle(center, radius - dradius * i, paint);
     }
 
-    paint
-      ..style = PaintingStyle.fill
-      ..shader = SweepGradient(
-        startAngle: 0,
-        endAngle: 2,
-        colors: [AppColors.primary.withOpacity(0.1), AppColors.primary],
-        transform: GradientRotation(angle),
-      ).createShader(
-        Rect.fromCircle(center: center, radius: radius),
-      );
+    if (isScanning) {
+      final paint = Paint()
+        ..style = PaintingStyle.fill
+        ..color = AppColors.radar
+        ..shader = SweepGradient(
+          startAngle: 0,
+          endAngle: 2,
+          colors: [AppColors.radar.withOpacity(0.0), AppColors.radar],
+          transform: GradientRotation(angle),
+        ).createShader(
+          Rect.fromCircle(center: center, radius: radius),
+        );
 
-    canvas.drawArc(Rect.fromCircle(center: center, radius: radius), angle, 2, true, paint);
-    // print(size.width);
+      canvas.drawArc(Rect.fromCircle(center: center, radius: radius), angle, 2, true, paint);
+    }
+
     for (final device in devices) {
-      final range = device.signal;
+      final range = max(0, device.signal - 40);
       final angle = (device.color % 360) * pi / 180;
       final opacity = 1 - this.angle / (2 * pi);
-      // print(this.angle / (2 * pi));
 
       final paint = Paint();
       final position = Offset(range * cos(angle) + center.dx, range * sin(angle) + center.dy);
 
-      canvas.drawCircle(position, 6, paint..color = AppColors.primary.withOpacity(opacity));
+      paint.maskFilter = const MaskFilter.blur(BlurStyle.normal, 5);
+      canvas.drawCircle(position, 6, paint..color = Color(device.color).withOpacity(opacity));
+      paint.maskFilter = null;
       canvas.drawCircle(position, 5, paint..color = Color(device.color).withOpacity(opacity));
-
-      // print(device.color % size.width);
-      // final x = range * cos(radians)
-      // print(color);
     }
   }
 

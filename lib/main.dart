@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hide_and_seek/bloc/locator/locator_bloc.dart';
 import 'package:hide_and_seek/repository/ble/ble_repository.dart';
 import 'package:hide_and_seek/repository/ble/ble_repository_impl.dart';
-import 'package:hide_and_seek/ui/page/locator/locator_page.dart';
-import 'package:hide_and_seek/ui/page/main/main_page.dart';
 import 'package:hide_and_seek/ui/page/start/start_page.dart';
-import 'package:hide_and_seek/ui/util/app_colors.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -36,7 +31,11 @@ class App extends StatelessWidget {
             900: Color(0xFF000000),
           },
         ),
-        scaffoldBackgroundColor: AppColors.background,
+        scaffoldBackgroundColor: Colors.transparent,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ),
       ),
       home: MultiProvider(
         providers: [
@@ -45,10 +44,7 @@ class App extends StatelessWidget {
             dispose: (_, repository) => repository.close(),
           ),
         ],
-        child: BlocProvider(
-          create: (context) => LocatorBloc(repository: context.read()),
-          child: const LocatorPage(),
-        ),
+        child: const StartPage(),
       ),
     );
   }

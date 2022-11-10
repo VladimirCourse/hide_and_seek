@@ -5,11 +5,13 @@ import 'package:hide_and_seek/model/device_model.dart';
 import 'package:hide_and_seek/ui/page/locator/widgets/locator_radar_painter.dart';
 
 class LocatorRadarWidget extends StatefulWidget {
+  final bool isScanning;
   final VoidCallback onRefresh;
   final List<DeviceModel> devices;
 
   const LocatorRadarWidget({
     super.key,
+    required this.isScanning,
     required this.devices,
     required this.onRefresh,
   });
@@ -43,7 +45,22 @@ class _LocatorRadarWidgetState extends State<LocatorRadarWidget> with SingleTick
 
     _animation = Tween(begin: 0.0, end: pi * 2).animate(_controller);
 
-    _controller.forward();
+    if (widget.isScanning) {
+      _controller.forward();
+    }
+  }
+
+  @override
+  void didUpdateWidget(LocatorRadarWidget old) {
+    if (widget.isScanning) {
+      if (!_controller.isAnimating) {
+        _controller.forward();
+      }
+    } else {
+      _controller.reset();
+    }
+
+    super.didUpdateWidget(old);
   }
 
   @override
@@ -63,6 +80,7 @@ class _LocatorRadarWidgetState extends State<LocatorRadarWidget> with SingleTick
         child: CustomPaint(
           painter: LocatorRadarPainter(
             angle: _animation.value,
+            isScanning: widget.isScanning,
             devices: widget.devices,
           ),
         ),
