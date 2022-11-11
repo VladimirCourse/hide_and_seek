@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hide_and_seek/repository/ble/ble_repository.dart';
-import 'package:hide_and_seek/repository/ble/ble_repository_impl.dart';
+import 'package:hide_and_seek/repository/device/audio_repository.dart';
+
+import 'package:hide_and_seek/repository/device/bluetooth_repository.dart';
 import 'package:hide_and_seek/ui/page/start/start_page.dart';
 import 'package:provider/provider.dart';
 
@@ -16,21 +17,6 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'Hide and seek',
       theme: ThemeData(
-        primarySwatch: const MaterialColor(
-          0xFF000000,
-          <int, Color>{
-            50: Color(0xFF000000),
-            100: Color(0xFF000000),
-            200: Color(0xFF000000),
-            300: Color(0xFF000000),
-            400: Color(0xFF000000),
-            500: Color(0xFF000000),
-            600: Color(0xFF000000),
-            700: Color(0xFF000000),
-            800: Color(0xFF000000),
-            900: Color(0xFF000000),
-          },
-        ),
         scaffoldBackgroundColor: Colors.transparent,
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.transparent,
@@ -39,8 +25,13 @@ class App extends StatelessWidget {
       ),
       home: MultiProvider(
         providers: [
-          Provider<BLERepository>(
-            create: (_) => BLERepositoryImpl(),
+          Provider<BluetoothRepository>(
+            create: (_) => BluetoothRepository(),
+            dispose: (_, repository) => repository.close(),
+          ),
+          Provider<AudioRepository>(
+            lazy: false,
+            create: (_) => AudioRepository()..init(),
             dispose: (_, repository) => repository.close(),
           ),
         ],

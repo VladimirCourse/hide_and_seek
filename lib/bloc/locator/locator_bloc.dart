@@ -3,7 +3,8 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hide_and_seek/model/device_model.dart';
-import 'package:hide_and_seek/repository/ble/ble_repository.dart';
+import 'package:hide_and_seek/repository/device/audio_repository.dart';
+import 'package:hide_and_seek/repository/device/bluetooth_repository.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'locator_bloc.freezed.dart';
@@ -12,18 +13,31 @@ part 'locator_event.dart';
 part 'locator_state.dart';
 
 class LocatorBloc extends Bloc<LocatorEvent, LocatorState> {
-  final BLERepository repository;
+  final BluetoothRepository bluetoothRepository;
+  final AudioRepository audioRepository;
 
-  StreamSubscription? _subscription;
+  StreamSubscription? _bluetoothSubscription;
+  StreamSubscription? _audioSubscription;
 
   List<DeviceModel> _devices = [];
+  List<DeviceModel> _bluetoothDevices = [];
+  List<DeviceModel> _audioDevices = [];
+
+  bool get _isScanning => audioRepository.isScanning && bluetoothRepository.isScanning;
 
   LocatorBloc({
-    required this.repository,
+    required this.bluetoothRepository,
+    required this.audioRepository,
   }) : super(const LocatorState()) {
-    _subscription = repository.devices.listen(
-      (devices) => _devices = devices..sort((d1, d2) => d1.signal.compareTo(d2.signal)),
-    );
+    _bluetoothSubscription = bluetoothRepository.devices.listen((devices) {
+      _bluetoothDevices = devices;
+      _devices = (_bluetoothDevices + _audioDevices)..sort((d1, d2) => d1.signal.compareTo(d2.signal));
+    });
+
+    _audioSubscription = audioRepository.devices.listen((devices) {
+      _audioDevices = devices;
+      _devices = (_bluetoothDevices + _audioDevices)..sort((d1, d2) => d1.signal.compareTo(d2.signal));
+    });
 
     on<_StartScan>(_handleStartScan);
     on<_StopScan>(_handleStopScan);
@@ -32,9 +46,20 @@ class LocatorBloc extends Bloc<LocatorEvent, LocatorState> {
 
   void _handleStartScan(_StartScan event, Emitter<LocatorState> emit) async {
     try {
-      await repository.startScan(onError: event.onError);
+      await bluetoothRepository.startScan(
+        onError: () {
+          _stopScan();
+          event.onError?.call();
+        },
+      );
+      await audioRepository.startScan(
+        onError: () {
+          _stopScan();
+          event.onError?.call();
+        },
+      );
 
-      emit(LocatorState(isScanning: repository.isScanning, devices: _devices));
+      emit(LocatorState(isScanning: _isScanning, devices: _devices));
     } catch (ex) {
       event.onError?.call();
     }
@@ -42,26 +67,31 @@ class LocatorBloc extends Bloc<LocatorEvent, LocatorState> {
 
   void _handleStopScan(_StopScan event, Emitter<LocatorState> emit) async {
     try {
-      await repository.stopScan();
+      await _stopScan();
 
       _devices = [];
 
-      emit(LocatorState(isScanning: repository.isScanning));
+      emit(LocatorState(isScanning: _isScanning));
     } catch (ex) {
       event.onError?.call();
     }
   }
 
   void _handleRefreshDevices(_RefreshDevices event, Emitter<LocatorState> emit) async {
-    emit(
-      LocatorState(isScanning: repository.isScanning, devices: _devices),
-    );
+    emit(LocatorState(isScanning: _isScanning, devices: _devices));
+  }
+
+  Future<void> _stopScan() async {
+    await _bluetoothSubscription?.cancel();
+    await bluetoothRepository.stopScan();
+
+    await _audioSubscription?.cancel();
+    await audioRepository.stopScan();
   }
 
   @override
   Future<void> close() async {
-    await _subscription?.cancel();
-    await repository.stopScan();
+    await _stopScan();
 
     super.close();
   }

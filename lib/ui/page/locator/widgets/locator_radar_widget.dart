@@ -40,6 +40,7 @@ class _LocatorRadarWidgetState extends State<LocatorRadarWidget> with SingleTick
 
         widget.onRefresh();
       }
+
       setState(() {});
     });
 

@@ -13,7 +13,10 @@ class StartPage extends StatelessWidget {
       MaterialPageRoute(
         fullscreenDialog: true,
         builder: (_) => BlocProvider(
-          create: (_) => LocatorBloc(repository: context.read()),
+          create: (_) => LocatorBloc(
+            bluetoothRepository: context.read(),
+            audioRepository: context.read(),
+          ),
           child: const LocatorPage(),
         ),
       ),

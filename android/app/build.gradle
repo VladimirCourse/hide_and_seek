@@ -47,11 +47,19 @@ android {
         applicationId "com.example.hide_and_seek"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion flutter.targetSdkVersion
         compileSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+    }
+
+    aaptOptions {
+        noCompress 'tflite'
+    }
+
+    lintOptions {
+        disable 'InvalidPackage'
     }
 
     buildTypes {
@@ -69,4 +77,5 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.tensorflow:tensorflow-lite-select-tf-ops:+"
 }

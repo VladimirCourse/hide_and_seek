@@ -50,7 +50,7 @@ class LocatorRadarPainter extends CustomPainter {
     }
 
     for (final device in devices) {
-      final range = max(0, device.signal - 40);
+      final range = max(0, device.signal);
       final angle = (device.color % 360) * pi / 180;
       final opacity = 1 - this.angle / (2 * pi);
 

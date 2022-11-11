@@ -26,7 +26,7 @@ class LocatorPage extends StatelessWidget {
   void _showDeviceInfo(BuildContext context, DeviceModel device) {
     final snackBar = SnackBar(
       content: Text(
-        'id: ${device.id}\nимя: ${device.name}\nрасстояние: ${device.distance} м\nсигнал: ${device.signal}',
+        'id: ${device.id}\nимя: ${device.name}\nрасстояние: ${device.distance} м\nсигнал: ${device.signal}\nтип: ${device.source}',
       ),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
