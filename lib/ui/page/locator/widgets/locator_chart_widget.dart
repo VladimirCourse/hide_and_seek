@@ -16,6 +16,7 @@ class LocatorChartWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height * 0.2;
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 300),
       child: Column(
@@ -37,7 +38,7 @@ class LocatorChartWidget extends StatelessWidget {
           ),
           SizedBox(
             key: ValueKey(devices.length),
-            height: 180,
+            height: height,
             child: ListView(
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
@@ -59,7 +60,7 @@ class LocatorChartWidget extends StatelessWidget {
                                 duration: const Duration(milliseconds: 300),
                                 child: Container(
                                   key: ValueKey(Tuple2(device.id, device.signal)),
-                                  height: max(10, 140.0 - device.signal * 1.5),
+                                  height: max(10, (height - 10) - device.signal * 1.5),
                                   width: 20,
                                   margin: const EdgeInsets.symmetric(horizontal: 2),
                                   decoration: BoxDecoration(

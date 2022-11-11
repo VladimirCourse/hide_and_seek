@@ -31,12 +31,16 @@ class BluetoothRepository extends DeviceRepository {
 
   StreamSubscription? _subscription;
   bool _isScanning = false;
+  bool _isSending = false;
 
   @override
   final String deviceId = Random().nextInt(0xffffff).toRadixString(16);
 
   @override
   bool get isScanning => _isScanning;
+
+  @override
+  bool get isSending => _isSending;
 
   @override
   Stream<List<DeviceModel>> get devices => _devicesSubject.stream;
@@ -47,7 +51,8 @@ class BluetoothRepository extends DeviceRepository {
   @override
   Future<void> startScan({ErrorCallback? onError}) async {
     if (!_isScanning) {
-      await stopScan();
+      await _subscription?.cancel();
+      _subscription = null;
 
       const closeSignal = 40;
 
@@ -75,7 +80,6 @@ class BluetoothRepository extends DeviceRepository {
       _flutterBlue.startScan(timeout: const Duration(minutes: 5), allowDuplicates: true).onError(
         (error, stackTrace) {
           _isScanning = false;
-
           onError?.call();
         },
       );
@@ -95,7 +99,7 @@ class BluetoothRepository extends DeviceRepository {
   }
 
   @override
-  Future<void> sendSignal() async {
+  Future<void> startSignal() async {
     // final Map<Permission, PermissionStatus> statuses = await [
     //   Permission.bluetooth,
     //   Permission.bluetoothAdvertise,
@@ -108,20 +112,23 @@ class BluetoothRepository extends DeviceRepository {
         advertiseSettings: _advertiseSettings,
       );
 
-      await Future.delayed(const Duration(seconds: 5));
+      _isSending = true;
+    }
+  }
 
+  @override
+  Future<void> stopSignal() async {
+    if (await _blePeripheral.isAdvertising) {
       await _blePeripheral.stop();
+
+      _isSending = false;
     }
   }
 
   @override
   Future<void> close() async {
-    if (await _blePeripheral.isAdvertising) {
-      await _blePeripheral.stop();
-    }
-
+    await stopSignal();
     await stopScan();
-
     await _devicesSubject.close();
   }
 }

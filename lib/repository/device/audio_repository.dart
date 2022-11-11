@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:hide_and_seek/model/device_model.dart';
 import 'package:hide_and_seek/repository/device/device_repository.dart';
 import 'package:noise_meter/noise_meter.dart';
@@ -8,7 +9,11 @@ import 'package:rxdart/subjects.dart';
 import 'package:tflite_audio/tflite_audio.dart';
 
 class AudioRepository extends DeviceRepository {
+  static const _audioTags = ['vorona'];
+
   final _devicesSubject = BehaviorSubject<List<DeviceModel>>();
+  final _player = AudioPlayer();
+  final _audioTag = _audioTags[Random().nextInt(_audioTags.length)];
 
   StreamSubscription? _noiseSubscription;
   StreamSubscription? _recognizingSubscription;
@@ -17,10 +22,13 @@ class AudioRepository extends DeviceRepository {
   double _currentNoise = 0;
 
   @override
-  final String deviceId = Random().nextInt(0xffffff).toRadixString(16);
+  late final String deviceId = _audioTag.hashCode.toRadixString(16).padLeft(6, '0').substring(0, 6);
 
   @override
   bool get isScanning => _isScanning;
+
+  @override
+  bool get isSending => _player.state == PlayerState.playing;
 
   @override
   Stream<List<DeviceModel>> get devices => _devicesSubject.stream;
@@ -44,15 +52,12 @@ class AudioRepository extends DeviceRepository {
       _noiseSubscription = null;
 
       _isScanning = true;
-      print('here');
 
       try {
         final noiseMeter = NoiseMeter();
         _noiseSubscription = noiseMeter.noiseStream.listen((data) {
           _currentNoise = data.maxDecibel;
         });
-
-        print('here');
 
         final stream = TfliteAudio.startAudioRecognition(
           sampleRate: 44100,
@@ -68,7 +73,8 @@ class AudioRepository extends DeviceRepository {
 
         _recognizingSubscription = stream.listen((event) {
           final res = event['recognitionResult'].replaceAll('[', '').replaceAll(']', '').split(', ');
-
+          print(event);
+          print(_currentNoise);
           final score = double.tryParse(res.first);
           if (score != null && score > threshold) {
             final signal = (maxSignal - (closeSignal - _currentNoise.toInt()).abs() * 2).abs();
@@ -105,7 +111,20 @@ class AudioRepository extends DeviceRepository {
   }
 
   @override
-  Future<void> sendSignal() async {}
+  Future<void> startSignal() async {
+    if (_player.state != PlayerState.playing) {
+      await _player.setReleaseMode(ReleaseMode.loop);
+      await _player.play(AssetSource('audio/$_audioTag.wav'));
+    }
+  }
+
+  @override
+  Future<void> stopSignal() async {
+    if (_player.state == PlayerState.playing) {
+      await _player.stop();
+      await _player.release();
+    }
+  }
 
   @override
   Future<void> close() async {

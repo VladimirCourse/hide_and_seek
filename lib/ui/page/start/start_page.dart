@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hide_and_seek/bloc/hiding/hiding_bloc.dart';
 import 'package:hide_and_seek/bloc/locator/locator_bloc.dart';
+import 'package:hide_and_seek/ui/page/hiding/hiding_page.dart';
 import 'package:hide_and_seek/ui/page/locator/locator_page.dart';
 import 'package:hide_and_seek/ui/page/start/widgets/start_button.dart';
 import 'package:hide_and_seek/ui/util/app_colors.dart';
@@ -18,6 +20,21 @@ class StartPage extends StatelessWidget {
             audioRepository: context.read(),
           ),
           child: const LocatorPage(),
+        ),
+      ),
+    );
+  }
+
+  void _openHidingPage(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (_) => BlocProvider(
+          create: (_) => HidingBloc(
+            bluetoothRepository: context.read(),
+            audioRepository: context.read(),
+          ),
+          child: const HidingPage(),
         ),
       ),
     );
@@ -52,7 +69,7 @@ class StartPage extends StatelessWidget {
                     size: 50,
                     color: Colors.white,
                   ),
-                  onPressed: () {},
+                  onPressed: () => _openHidingPage(context),
                 ),
               ],
             ),

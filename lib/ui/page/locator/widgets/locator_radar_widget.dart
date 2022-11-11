@@ -73,7 +73,7 @@ class _LocatorRadarWidgetState extends State<LocatorRadarWidget> with SingleTick
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size.width * 0.6;
+    final size = MediaQuery.of(context).size.height * 0.25;
     return Center(
       child: SizedBox(
         width: size,

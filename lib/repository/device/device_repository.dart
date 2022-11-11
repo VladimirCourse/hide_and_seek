@@ -7,6 +7,8 @@ abstract class DeviceRepository {
 
   bool get isScanning;
 
+  bool get isSending;
+
   Stream<List<DeviceModel>> get devices;
 
   Future<void> init();
@@ -15,7 +17,9 @@ abstract class DeviceRepository {
 
   Future<void> stopScan();
 
-  Future<void> sendSignal();
+  Future<void> startSignal();
+
+  Future<void> stopSignal();
 
   Future<void> close();
 }

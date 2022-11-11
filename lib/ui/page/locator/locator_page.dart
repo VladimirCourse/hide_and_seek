@@ -6,7 +6,6 @@ import 'package:hide_and_seek/model/device_model.dart';
 import 'package:hide_and_seek/ui/page/locator/widgets/locator_chart_widget.dart';
 import 'package:hide_and_seek/ui/page/locator/widgets/locator_radar_widget.dart';
 import 'package:hide_and_seek/ui/util/app_colors.dart';
-import 'package:provider/provider.dart';
 
 class LocatorPage extends StatelessWidget {
   const LocatorPage({super.key});
@@ -86,7 +85,7 @@ class LocatorPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 34),
                       Text(
-                        state.isScanning ? 'Выключить сканирование' : 'Включить сканирование',
+                        state.isScanning ? 'Идет поиск...' : 'Поиск выключен',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 22,
@@ -95,16 +94,6 @@ class LocatorPage extends StatelessWidget {
                     ],
                   ),
                 ),
-
-                // PrimaryButton.accept(
-                //   onPressed: () => _startScan(context),
-                //   title: 'Сканировать',
-                // ),
-                // const SizedBox(height: 20),
-                // PrimaryButton.cancel(
-                //   onPressed: () => _stopScan(context),
-                //   title: 'Остановить',
-                // ),
                 const SizedBox(height: 20)
               ],
             ),
