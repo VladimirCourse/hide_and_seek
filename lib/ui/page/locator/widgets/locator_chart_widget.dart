@@ -60,7 +60,7 @@ class LocatorChartWidget extends StatelessWidget {
                                 duration: const Duration(milliseconds: 300),
                                 child: Container(
                                   key: ValueKey(Tuple2(device.id, device.signal)),
-                                  height: max(10, (height - 10) - device.signal * 1.5),
+                                  height: max(10, (height - 30) - device.signal * 1.5),
                                   width: 20,
                                   margin: const EdgeInsets.symmetric(horizontal: 2),
                                   decoration: BoxDecoration(

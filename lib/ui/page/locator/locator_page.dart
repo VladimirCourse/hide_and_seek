@@ -36,8 +36,9 @@ class LocatorPage extends StatelessWidget {
 
     const snackBar = SnackBar(
       content: Text(
-        'Ошибочка:( Пожалуйста, проверьте, что BT включен, приложение получило все необходимые разрешения и попробуйте снова',
+        'Ошибочка:( Пожалуйста, проверьте, что BT включен, приложение получило все необходимые разрешения и попробуйте снова. На старых Android также необходимо включить геолокацию.',
       ),
+      duration: Duration(seconds: 3),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }

@@ -23,7 +23,7 @@ class LocatorBloc extends Bloc<LocatorEvent, LocatorState> {
   List<DeviceModel> _bluetoothDevices = [];
   List<DeviceModel> _audioDevices = [];
 
-  bool get _isScanning => audioRepository.isScanning && bluetoothRepository.isScanning;
+  bool get _isScanning => audioRepository.isScanning || bluetoothRepository.isScanning;
 
   LocatorBloc({
     required this.bluetoothRepository,
@@ -36,7 +36,6 @@ class LocatorBloc extends Bloc<LocatorEvent, LocatorState> {
 
     _audioSubscription = audioRepository.devices.listen((devices) {
       _audioDevices = devices;
-      print(_audioDevices);
       _devices = (_bluetoothDevices + _audioDevices)..sort((d1, d2) => d1.signal.compareTo(d2.signal));
     });
 
@@ -53,12 +52,13 @@ class LocatorBloc extends Bloc<LocatorEvent, LocatorState> {
           event.onError?.call();
         },
       );
-      // await audioRepository.startScan(
-      //   onError: () {
-      //     _stopScan();
-      //     event.onError?.call();
-      //   },
-      // );
+
+      await audioRepository.startScan(
+        onError: () {
+          _stopScan();
+          event.onError?.call();
+        },
+      );
 
       emit(LocatorState(isScanning: _isScanning, devices: _devices));
     } catch (ex) {
@@ -83,8 +83,8 @@ class LocatorBloc extends Bloc<LocatorEvent, LocatorState> {
   }
 
   Future<void> _stopScan() async {
-    bluetoothRepository.stopScan();
     await audioRepository.stopScan();
+    await bluetoothRepository.stopScan();
   }
 
   @override

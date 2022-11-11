@@ -73,8 +73,6 @@ class AudioRepository extends DeviceRepository {
 
         _recognizingSubscription = stream.listen((event) {
           final res = event['recognitionResult'].replaceAll('[', '').replaceAll(']', '').split(', ');
-          print(event);
-          print(_currentNoise);
           final score = double.tryParse(res.first);
           if (score != null && score > threshold) {
             final signal = (maxSignal - (closeSignal - _currentNoise.toInt()).abs() * 2).abs();

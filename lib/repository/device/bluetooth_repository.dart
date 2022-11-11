@@ -51,13 +51,15 @@ class BluetoothRepository extends DeviceRepository {
   @override
   Future<void> startScan({ErrorCallback? onError}) async {
     if (!_isScanning) {
+      print('started');
+
       await _subscription?.cancel();
       _subscription = null;
 
       const closeSignal = 40;
 
       _subscription = _flutterBlue.scanResults.listen((results) {
-        final devices = results
+        final devices = results.where((e) => DateTime.now().difference(e.timeStamp).inSeconds < 3)
             // .where((e) => e.advertisementData.serviceUuids.firstOrNull?.startsWith(serviceId) ?? false)
             .map((e) {
           final defaultId = (e.device.id.hashCode % 1000000).toRadixString(16).padLeft(6, '0');
@@ -83,6 +85,8 @@ class BluetoothRepository extends DeviceRepository {
           onError?.call();
         },
       );
+
+      // _isScanning = false;
     }
   }
 
