@@ -52,7 +52,7 @@ class LocatorChartWidget extends StatelessWidget {
                           width: 40,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               AnimatedSize(
                                 alignment: Alignment.bottomCenter,
@@ -82,7 +82,18 @@ class LocatorChartWidget extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 10),
+                              const SizedBox(height: 4),
+                              Center(
+                                child: Container(
+                                  width: 6,
+                                  height: 6,
+                                  decoration: BoxDecoration(
+                                    color: device.source == DeviceSource.bluetooth ? Colors.blue : Colors.red,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 4),
                               Text(
                                 '~${device.distance} м',
                                 maxLines: 1,

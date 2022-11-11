@@ -82,16 +82,17 @@ class LocatorBloc extends Bloc<LocatorEvent, LocatorState> {
   }
 
   Future<void> _stopScan() async {
-    await _bluetoothSubscription?.cancel();
     await bluetoothRepository.stopScan();
 
-    await _audioSubscription?.cancel();
     await audioRepository.stopScan();
   }
 
   @override
   Future<void> close() async {
     await _stopScan();
+
+    await _bluetoothSubscription?.cancel();
+    await _audioSubscription?.cancel();
 
     super.close();
   }

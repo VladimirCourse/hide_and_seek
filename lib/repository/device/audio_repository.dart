@@ -76,9 +76,6 @@ class AudioRepository extends DeviceRepository {
           } else {
             _devicesSubject.add([]);
           }
-
-          // print(event['recognitionResult']);
-          // print(event["recognitionResult"]);
         });
       } catch (exception) {
         _isScanning = false;
