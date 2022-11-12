@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hide_and_seek/bloc/hiding/hiding_bloc.dart';
@@ -19,7 +20,7 @@ class StartPage extends StatelessWidget {
     ].request();
 
     await Navigator.of(context).push(
-      MaterialPageRoute(
+      CupertinoPageRoute(
         fullscreenDialog: true,
         builder: (_) => BlocProvider(
           create: (_) => LocatorBloc(
@@ -40,7 +41,7 @@ class StartPage extends StatelessWidget {
     ].request();
 
     Navigator.of(context).push(
-      MaterialPageRoute(
+      CupertinoPageRoute(
         fullscreenDialog: true,
         builder: (_) => BlocProvider(
           create: (_) => HidingBloc(
