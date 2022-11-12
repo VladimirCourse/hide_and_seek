@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hide_and_seek/repository/device/audio_repository.dart';
+import 'package:hide_and_seek/repository/device/audio_device_repository.dart';
 
-import 'package:hide_and_seek/repository/device/bluetooth_repository.dart';
+import 'package:hide_and_seek/repository/device/bluetooth_device_repository.dart';
 import 'package:hide_and_seek/ui/page/start/start_page.dart';
 import 'package:provider/provider.dart';
 
@@ -21,13 +21,13 @@ class App extends StatelessWidget {
     ]);
     return MultiProvider(
       providers: [
-        Provider<BluetoothRepository>(
-          create: (_) => BluetoothRepository(),
+        Provider<BluetoothDeviceRepository>(
+          create: (_) => BluetoothDeviceRepository(),
           dispose: (_, repository) => repository.close(),
         ),
-        Provider<AudioRepository>(
+        Provider<AudioDeviceRepository>(
           lazy: false,
-          create: (_) => AudioRepository()..init(),
+          create: (_) => AudioDeviceRepository()..init(),
           dispose: (_, repository) => repository.close(),
         ),
       ],

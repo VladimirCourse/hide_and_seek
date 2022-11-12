@@ -8,7 +8,7 @@ import 'package:hide_and_seek/model/device_model.dart';
 import 'package:hide_and_seek/repository/device/device_repository.dart';
 import 'package:rxdart/subjects.dart';
 
-class BluetoothRepository extends DeviceRepository {
+class BluetoothDeviceRepository extends DeviceRepository {
   static const serviceId = '30000003-2002-1001-8008-bb11bb';
 
   final _blePeripheral = FlutterBlePeripheral();

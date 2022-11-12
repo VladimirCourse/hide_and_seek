@@ -3,16 +3,16 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hide_and_seek/model/device_model.dart';
-import 'package:hide_and_seek/repository/device/audio_repository.dart';
-import 'package:hide_and_seek/repository/device/bluetooth_repository.dart';
+import 'package:hide_and_seek/repository/device/audio_device_repository.dart';
+import 'package:hide_and_seek/repository/device/bluetooth_device_repository.dart';
 
 part 'locator_bloc.freezed.dart';
 part 'locator_event.dart';
 part 'locator_state.dart';
 
 class LocatorBloc extends Bloc<LocatorEvent, LocatorState> {
-  final BluetoothRepository bluetoothRepository;
-  final AudioRepository audioRepository;
+  final BluetoothDeviceRepository bluetoothRepository;
+  final AudioDeviceRepository audioRepository;
 
   StreamSubscription? _bluetoothSubscription;
   StreamSubscription? _audioSubscription;

@@ -8,7 +8,7 @@ import 'package:noise_meter/noise_meter.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:tflite_audio/tflite_audio.dart';
 
-class AudioRepository extends DeviceRepository {
+class AudioDeviceRepository extends DeviceRepository {
   static const audioTags = ['orel', 'vorona'];
   static String idByTag(String tag) => tag.hashCode.toRadixString(16).padLeft(6, '0').substring(0, 6);
 

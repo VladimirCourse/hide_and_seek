@@ -2,16 +2,16 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:hide_and_seek/repository/device/audio_repository.dart';
-import 'package:hide_and_seek/repository/device/bluetooth_repository.dart';
+import 'package:hide_and_seek/repository/device/audio_device_repository.dart';
+import 'package:hide_and_seek/repository/device/bluetooth_device_repository.dart';
 
 part 'hiding_bloc.freezed.dart';
 part 'hiding_event.dart';
 part 'hiding_state.dart';
 
 class HidingBloc extends Bloc<HidingEvent, HidingState> {
-  final BluetoothRepository bluetoothRepository;
-  final AudioRepository audioRepository;
+  final BluetoothDeviceRepository bluetoothRepository;
+  final AudioDeviceRepository audioRepository;
 
   HidingBloc({
     required this.bluetoothRepository,
