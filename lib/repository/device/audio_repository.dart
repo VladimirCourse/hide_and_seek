@@ -9,11 +9,12 @@ import 'package:rxdart/subjects.dart';
 import 'package:tflite_audio/tflite_audio.dart';
 
 class AudioRepository extends DeviceRepository {
-  static const _audioTags = ['vorona'];
+  static const audioTags = ['orel', 'vorona'];
+  static String idByTag(String tag) => tag.hashCode.toRadixString(16).padLeft(6, '0').substring(0, 6);
 
   final _devicesSubject = BehaviorSubject<List<DeviceModel>>();
   final _player = AudioPlayer();
-  final _audioTag = _audioTags[Random().nextInt(_audioTags.length)];
+  final _audioTag = audioTags[Random().nextInt(audioTags.length)];
 
   StreamSubscription? _noiseSubscription;
   StreamSubscription? _recognizingSubscription;
@@ -22,7 +23,7 @@ class AudioRepository extends DeviceRepository {
   double _currentNoise = 0;
 
   @override
-  late final String deviceId = _audioTag.hashCode.toRadixString(16).padLeft(6, '0').substring(0, 6);
+  late final String deviceId = idByTag(_audioTag);
 
   @override
   bool get isScanning => _isScanning;
@@ -72,14 +73,25 @@ class AudioRepository extends DeviceRepository {
         const threshold = 0.85;
 
         _recognizingSubscription = stream.listen((event) {
-          final res = event['recognitionResult'].replaceAll('[', '').replaceAll(']', '').split(', ');
-          final score = double.tryParse(res.first);
-          if (score != null && score > threshold) {
-            final signal = (maxSignal - (closeSignal - _currentNoise.toInt()).abs() * 2).abs();
-            _devicesSubject.add([DeviceModel(id: '123', signal: signal, name: 'name', source: DeviceSource.audio)]);
-          } else {
-            _devicesSubject.add([]);
+          final results = event['recognitionResult'].replaceAll('[', '').replaceAll(']', '').split(', ');
+          final List<DeviceModel> devices = [];
+
+          for (int i = 0; i < audioTags.length; i++) {
+            final score = double.tryParse(results[i]);
+            if (score != null && score > threshold) {
+              final signal = (maxSignal - (closeSignal - _currentNoise.toInt()).abs() * 2).abs();
+              devices.add(
+                DeviceModel(
+                  id: idByTag(audioTags[i]),
+                  signal: signal,
+                  name: audioTags[i],
+                  source: DeviceSource.audio,
+                ),
+              );
+            }
           }
+
+          _devicesSubject.add(devices);
         });
       } catch (exception) {
         _isScanning = false;

@@ -33,6 +33,8 @@ class BluetoothRepository extends DeviceRepository {
   bool _isScanning = false;
   bool _isSending = false;
 
+  bool showAllDevices = false;
+
   @override
   final String deviceId = Random().nextInt(0xffffff).toRadixString(16);
 
@@ -51,16 +53,15 @@ class BluetoothRepository extends DeviceRepository {
   @override
   Future<void> startScan({ErrorCallback? onError}) async {
     if (!_isScanning) {
-      print('started');
-
       await _subscription?.cancel();
       _subscription = null;
 
       const closeSignal = 40;
 
       _subscription = _flutterBlue.scanResults.listen((results) {
-        final devices = results.where((e) => DateTime.now().difference(e.timeStamp).inSeconds < 3)
-            // .where((e) => e.advertisementData.serviceUuids.firstOrNull?.startsWith(serviceId) ?? false)
+        final devices = results
+            .where((e) => DateTime.now().difference(e.timeStamp).inSeconds < 3)
+            .where((e) => e.advertisementData.serviceUuids.firstOrNull?.startsWith(serviceId) ?? showAllDevices)
             .map((e) {
           final defaultId = (e.device.id.hashCode % 1000000).toRadixString(16).padLeft(6, '0');
           final fullId = e.advertisementData.serviceUuids.firstOrNull ?? defaultId;
@@ -85,8 +86,6 @@ class BluetoothRepository extends DeviceRepository {
           onError?.call();
         },
       );
-
-      // _isScanning = false;
     }
   }
 
@@ -104,12 +103,6 @@ class BluetoothRepository extends DeviceRepository {
 
   @override
   Future<void> startSignal() async {
-    // final Map<Permission, PermissionStatus> statuses = await [
-    //   Permission.bluetooth,
-    //   Permission.bluetoothAdvertise,
-    //   Permission.location,
-    // ].request();
-
     if (!await _blePeripheral.isAdvertising) {
       await _blePeripheral.start(
         advertiseData: _advertiseData,

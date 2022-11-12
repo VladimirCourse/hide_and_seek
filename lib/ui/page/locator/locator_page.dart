@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hide_and_seek/bloc/info/info_bloc.dart';
 import 'package:hide_and_seek/bloc/locator/locator_bloc.dart';
 import 'package:hide_and_seek/model/device_model.dart';
+import 'package:hide_and_seek/ui/page/info/info_page.dart';
 import 'package:hide_and_seek/ui/page/locator/widgets/locator_chart_widget.dart';
 import 'package:hide_and_seek/ui/page/locator/widgets/locator_radar_widget.dart';
 import 'package:hide_and_seek/ui/util/app_colors.dart';
@@ -28,6 +30,7 @@ class LocatorPage extends StatelessWidget {
         'id: ${device.id}\nимя: ${device.name}\nрасстояние: ${device.distance} м\nсигнал: ${device.signal}\nтип: ${device.source}',
       ),
     );
+
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
@@ -35,12 +38,27 @@ class LocatorPage extends StatelessWidget {
     _refreshDevices(context);
 
     const snackBar = SnackBar(
+      duration: Duration(seconds: 5),
       content: Text(
         'Ошибочка:( Пожалуйста, проверьте, что BT включен, приложение получило все необходимые разрешения и попробуйте снова. На старых Android также необходимо включить геолокацию.',
       ),
-      duration: Duration(seconds: 3),
     );
+
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  void _showInfo(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (_) => BlocProvider(
+        create: (_) => InfoBloc(
+          bluetoothRepository: context.read(),
+          audioRepository: context.read(),
+        ),
+        child: const InfoPage(type: InfoType.locator),
+      ),
+    );
   }
 
   @override
@@ -52,6 +70,12 @@ class LocatorPage extends StatelessWidget {
           appBar: AppBar(
             centerTitle: true,
             title: const Text('Локатор'),
+            actions: [
+              IconButton(
+                onPressed: () => _showInfo(context),
+                icon: const Icon(Icons.question_mark),
+              ),
+            ],
           ),
           body: SingleChildScrollView(
             child: Column(

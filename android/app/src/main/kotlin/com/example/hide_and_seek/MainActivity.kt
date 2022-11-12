@@ -1,4 +1,4 @@
-package com.example.hide_and_seek
+package com.vls.hide_and_seek
 
 import androidx.annotation.NonNull
 

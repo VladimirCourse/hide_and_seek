@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hide_and_seek/repository/device/audio_repository.dart';
 
 import 'package:hide_and_seek/repository/device/bluetooth_repository.dart';
@@ -14,28 +15,33 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Hide and seek',
-      theme: ThemeData(
-        scaffoldBackgroundColor: Colors.transparent,
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    return MultiProvider(
+      providers: [
+        Provider<BluetoothRepository>(
+          create: (_) => BluetoothRepository(),
+          dispose: (_, repository) => repository.close(),
         ),
-      ),
-      home: MultiProvider(
-        providers: [
-          Provider<BluetoothRepository>(
-            create: (_) => BluetoothRepository(),
-            dispose: (_, repository) => repository.close(),
+        Provider<AudioRepository>(
+          lazy: false,
+          create: (_) => AudioRepository()..init(),
+          dispose: (_, repository) => repository.close(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Hide and seek',
+        theme: ThemeData(
+          scaffoldBackgroundColor: Colors.transparent,
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
           ),
-          Provider<AudioRepository>(
-            lazy: false,
-            create: (_) => AudioRepository()..init(),
-            dispose: (_, repository) => repository.close(),
-          ),
-        ],
-        child: const StartPage(),
+          bottomSheetTheme: const BottomSheetThemeData(backgroundColor: Colors.transparent),
+        ),
+        home: const StartPage(),
       ),
     );
   }

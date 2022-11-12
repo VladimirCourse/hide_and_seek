@@ -6,12 +6,19 @@ import 'package:hide_and_seek/ui/page/hiding/hiding_page.dart';
 import 'package:hide_and_seek/ui/page/locator/locator_page.dart';
 import 'package:hide_and_seek/ui/page/start/widgets/start_button.dart';
 import 'package:hide_and_seek/ui/util/app_colors.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class StartPage extends StatelessWidget {
   const StartPage({super.key});
 
-  void _openLocatorPage(BuildContext context) {
-    Navigator.of(context).push(
+  Future<void> _openLocatorPage(BuildContext context) async {
+    await [
+      Permission.bluetooth,
+      Permission.microphone,
+      Permission.location,
+    ].request();
+
+    await Navigator.of(context).push(
       MaterialPageRoute(
         fullscreenDialog: true,
         builder: (_) => BlocProvider(
@@ -25,7 +32,13 @@ class StartPage extends StatelessWidget {
     );
   }
 
-  void _openHidingPage(BuildContext context) {
+  Future<void> _openHidingPage(BuildContext context) async {
+    await [
+      Permission.bluetooth,
+      Permission.bluetoothAdvertise,
+      Permission.location,
+    ].request();
+
     Navigator.of(context).push(
       MaterialPageRoute(
         fullscreenDialog: true,

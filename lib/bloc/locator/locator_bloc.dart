@@ -5,10 +5,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hide_and_seek/model/device_model.dart';
 import 'package:hide_and_seek/repository/device/audio_repository.dart';
 import 'package:hide_and_seek/repository/device/bluetooth_repository.dart';
-import 'package:rxdart/rxdart.dart';
 
 part 'locator_bloc.freezed.dart';
-
 part 'locator_event.dart';
 part 'locator_state.dart';
 

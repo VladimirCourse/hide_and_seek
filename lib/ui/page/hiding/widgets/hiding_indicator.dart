@@ -1,8 +1,4 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:hide_and_seek/model/device_model.dart';
-import 'package:hide_and_seek/ui/page/locator/widgets/locator_radar_painter.dart';
 
 class HidingIndicator extends StatefulWidget {
   final bool isOn;
