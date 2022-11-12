@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hide_and_seek/bloc/hiding/hiding_bloc.dart';
 import 'package:hide_and_seek/bloc/info/info_bloc.dart';
-import 'package:hide_and_seek/repository/device/audio_repository.dart';
-import 'package:hide_and_seek/repository/device/bluetooth_repository.dart';
 import 'package:hide_and_seek/ui/page/hiding/widgets/hiding_indicator.dart';
 import 'package:hide_and_seek/ui/page/info/info_page.dart';
 import 'package:hide_and_seek/ui/util/app_colors.dart';
