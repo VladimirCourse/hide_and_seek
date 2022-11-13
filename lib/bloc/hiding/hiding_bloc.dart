@@ -16,13 +16,15 @@ class HidingBloc extends Bloc<HidingEvent, HidingState> {
   HidingBloc({
     required this.bluetoothRepository,
     required this.audioRepository,
-  }) : super(HidingState(id: bluetoothRepository.deviceId, singalType: SingalType.bluetooth, isSending: false)) {
+  }) : super(HidingState(id: bluetoothRepository.deviceId, singalType: SingalType.bluetooth)) {
     on<_SendAudio>(_handleSendAudio);
     on<_SendBluetooth>(_handleSendBluetooth);
   }
 
   void _handleSendAudio(_SendAudio event, Emitter<HidingState> emit) async {
     try {
+      emit(state.copyWith(isLoading: true, isSending: true));
+
       await bluetoothRepository.stopSignal();
       await audioRepository.startSignal();
 
@@ -35,11 +37,15 @@ class HidingBloc extends Bloc<HidingEvent, HidingState> {
       );
     } catch (ex) {
       event.onError?.call();
+
+      emit(state.copyWith(isLoading: false, isSending: false));
     }
   }
 
   void _handleSendBluetooth(_SendBluetooth event, Emitter<HidingState> emit) async {
     try {
+      emit(state.copyWith(isLoading: true, isSending: true));
+
       await audioRepository.stopSignal();
       await bluetoothRepository.startSignal();
 
@@ -52,6 +58,8 @@ class HidingBloc extends Bloc<HidingEvent, HidingState> {
       );
     } catch (ex) {
       event.onError?.call();
+
+      emit(state.copyWith(isLoading: false, isSending: false));
     }
   }
 

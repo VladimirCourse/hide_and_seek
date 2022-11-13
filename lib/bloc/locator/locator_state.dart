@@ -5,5 +5,6 @@ class LocatorState with _$LocatorState {
   const factory LocatorState({
     @Default([]) List<DeviceModel> devices,
     @Default(false) bool isScanning,
+    @Default(false) bool isLoading,
   }) = _LocatorState;
 }

@@ -470,6 +470,7 @@ abstract class _StopScan implements LocatorEvent {
 mixin _$LocatorState {
   List<DeviceModel> get devices => throw _privateConstructorUsedError;
   bool get isScanning => throw _privateConstructorUsedError;
+  bool get isLoading => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $LocatorStateCopyWith<LocatorState> get copyWith =>
@@ -482,7 +483,7 @@ abstract class $LocatorStateCopyWith<$Res> {
           LocatorState value, $Res Function(LocatorState) then) =
       _$LocatorStateCopyWithImpl<$Res, LocatorState>;
   @useResult
-  $Res call({List<DeviceModel> devices, bool isScanning});
+  $Res call({List<DeviceModel> devices, bool isScanning, bool isLoading});
 }
 
 /// @nodoc
@@ -500,6 +501,7 @@ class _$LocatorStateCopyWithImpl<$Res, $Val extends LocatorState>
   $Res call({
     Object? devices = null,
     Object? isScanning = null,
+    Object? isLoading = null,
   }) {
     return _then(_value.copyWith(
       devices: null == devices
@@ -509,6 +511,10 @@ class _$LocatorStateCopyWithImpl<$Res, $Val extends LocatorState>
       isScanning: null == isScanning
           ? _value.isScanning
           : isScanning // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isLoading: null == isLoading
+          ? _value.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
               as bool,
     ) as $Val);
   }
@@ -522,7 +528,7 @@ abstract class _$$_LocatorStateCopyWith<$Res>
       __$$_LocatorStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<DeviceModel> devices, bool isScanning});
+  $Res call({List<DeviceModel> devices, bool isScanning, bool isLoading});
 }
 
 /// @nodoc
@@ -538,6 +544,7 @@ class __$$_LocatorStateCopyWithImpl<$Res>
   $Res call({
     Object? devices = null,
     Object? isScanning = null,
+    Object? isLoading = null,
   }) {
     return _then(_$_LocatorState(
       devices: null == devices
@@ -548,6 +555,10 @@ class __$$_LocatorStateCopyWithImpl<$Res>
           ? _value.isScanning
           : isScanning // ignore: cast_nullable_to_non_nullable
               as bool,
+      isLoading: null == isLoading
+          ? _value.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -556,7 +567,9 @@ class __$$_LocatorStateCopyWithImpl<$Res>
 
 class _$_LocatorState implements _LocatorState {
   const _$_LocatorState(
-      {final List<DeviceModel> devices = const [], this.isScanning = false})
+      {final List<DeviceModel> devices = const [],
+      this.isScanning = false,
+      this.isLoading = false})
       : _devices = devices;
 
   final List<DeviceModel> _devices;
@@ -570,10 +583,13 @@ class _$_LocatorState implements _LocatorState {
   @override
   @JsonKey()
   final bool isScanning;
+  @override
+  @JsonKey()
+  final bool isLoading;
 
   @override
   String toString() {
-    return 'LocatorState(devices: $devices, isScanning: $isScanning)';
+    return 'LocatorState(devices: $devices, isScanning: $isScanning, isLoading: $isLoading)';
   }
 
   @override
@@ -583,12 +599,14 @@ class _$_LocatorState implements _LocatorState {
             other is _$_LocatorState &&
             const DeepCollectionEquality().equals(other._devices, _devices) &&
             (identical(other.isScanning, isScanning) ||
-                other.isScanning == isScanning));
+                other.isScanning == isScanning) &&
+            (identical(other.isLoading, isLoading) ||
+                other.isLoading == isLoading));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(_devices), isScanning);
+  int get hashCode => Object.hash(runtimeType,
+      const DeepCollectionEquality().hash(_devices), isScanning, isLoading);
 
   @JsonKey(ignore: true)
   @override
@@ -600,12 +618,15 @@ class _$_LocatorState implements _LocatorState {
 abstract class _LocatorState implements LocatorState {
   const factory _LocatorState(
       {final List<DeviceModel> devices,
-      final bool isScanning}) = _$_LocatorState;
+      final bool isScanning,
+      final bool isLoading}) = _$_LocatorState;
 
   @override
   List<DeviceModel> get devices;
   @override
   bool get isScanning;
+  @override
+  bool get isLoading;
   @override
   @JsonKey(ignore: true)
   _$$_LocatorStateCopyWith<_$_LocatorState> get copyWith =>

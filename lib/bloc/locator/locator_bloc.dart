@@ -44,6 +44,8 @@ class LocatorBloc extends Bloc<LocatorEvent, LocatorState> {
 
   void _handleStartScan(_StartScan event, Emitter<LocatorState> emit) async {
     try {
+      emit(const LocatorState(isScanning: true, isLoading: true));
+
       await bluetoothRepository.startScan(
         onError: () {
           _stopScan();
@@ -61,6 +63,8 @@ class LocatorBloc extends Bloc<LocatorEvent, LocatorState> {
       emit(LocatorState(isScanning: _isScanning, devices: _devices));
     } catch (ex) {
       event.onError?.call();
+
+      emit(const LocatorState(isScanning: false, isLoading: false));
     }
   }
 

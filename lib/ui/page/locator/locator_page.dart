@@ -102,15 +102,18 @@ class LocatorPage extends StatelessWidget {
                         scale: 2.0,
                         child: CupertinoSwitch(
                           value: state.isScanning,
-                          activeColor: AppColors.radar,
+                          activeColor: state.isLoading ? Colors.yellow : AppColors.radar,
                           trackColor: Colors.white,
-                          // inactiveTrackColor: Colors.grey,
                           onChanged: (value) => value ? _startScan(context) : _stopScan(context),
                         ),
                       ),
                       const SizedBox(height: 34),
                       Text(
-                        state.isScanning ? 'Идет поиск...' : 'Поиск выключен',
+                        state.isLoading
+                            ? 'Загрузка...'
+                            : state.isScanning
+                                ? 'Идет поиск'
+                                : 'Поиск выключен',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 22,

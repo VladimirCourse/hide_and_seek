@@ -372,8 +372,9 @@ abstract class _SendBluetooth implements HidingEvent {
 /// @nodoc
 mixin _$HidingState {
   String get id => throw _privateConstructorUsedError;
-  bool get isSending => throw _privateConstructorUsedError;
   SingalType get singalType => throw _privateConstructorUsedError;
+  bool get isLoading => throw _privateConstructorUsedError;
+  bool get isSending => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $HidingStateCopyWith<HidingState> get copyWith =>
@@ -386,7 +387,7 @@ abstract class $HidingStateCopyWith<$Res> {
           HidingState value, $Res Function(HidingState) then) =
       _$HidingStateCopyWithImpl<$Res, HidingState>;
   @useResult
-  $Res call({String id, bool isSending, SingalType singalType});
+  $Res call({String id, SingalType singalType, bool isLoading, bool isSending});
 }
 
 /// @nodoc
@@ -403,22 +404,27 @@ class _$HidingStateCopyWithImpl<$Res, $Val extends HidingState>
   @override
   $Res call({
     Object? id = null,
-    Object? isSending = null,
     Object? singalType = null,
+    Object? isLoading = null,
+    Object? isSending = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      isSending: null == isSending
-          ? _value.isSending
-          : isSending // ignore: cast_nullable_to_non_nullable
-              as bool,
       singalType: null == singalType
           ? _value.singalType
           : singalType // ignore: cast_nullable_to_non_nullable
               as SingalType,
+      isLoading: null == isLoading
+          ? _value.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isSending: null == isSending
+          ? _value.isSending
+          : isSending // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -431,7 +437,7 @@ abstract class _$$_HidingStateCopyWith<$Res>
       __$$_HidingStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id, bool isSending, SingalType singalType});
+  $Res call({String id, SingalType singalType, bool isLoading, bool isSending});
 }
 
 /// @nodoc
@@ -446,22 +452,27 @@ class __$$_HidingStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? isSending = null,
     Object? singalType = null,
+    Object? isLoading = null,
+    Object? isSending = null,
   }) {
     return _then(_$_HidingState(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      isSending: null == isSending
-          ? _value.isSending
-          : isSending // ignore: cast_nullable_to_non_nullable
-              as bool,
       singalType: null == singalType
           ? _value.singalType
           : singalType // ignore: cast_nullable_to_non_nullable
               as SingalType,
+      isLoading: null == isLoading
+          ? _value.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isSending: null == isSending
+          ? _value.isSending
+          : isSending // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -470,18 +481,25 @@ class __$$_HidingStateCopyWithImpl<$Res>
 
 class _$_HidingState implements _HidingState {
   const _$_HidingState(
-      {required this.id, required this.isSending, required this.singalType});
+      {required this.id,
+      required this.singalType,
+      this.isLoading = false,
+      this.isSending = false});
 
   @override
   final String id;
   @override
-  final bool isSending;
-  @override
   final SingalType singalType;
+  @override
+  @JsonKey()
+  final bool isLoading;
+  @override
+  @JsonKey()
+  final bool isSending;
 
   @override
   String toString() {
-    return 'HidingState(id: $id, isSending: $isSending, singalType: $singalType)';
+    return 'HidingState(id: $id, singalType: $singalType, isLoading: $isLoading, isSending: $isSending)';
   }
 
   @override
@@ -490,14 +508,17 @@ class _$_HidingState implements _HidingState {
         (other.runtimeType == runtimeType &&
             other is _$_HidingState &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.isSending, isSending) ||
-                other.isSending == isSending) &&
             (identical(other.singalType, singalType) ||
-                other.singalType == singalType));
+                other.singalType == singalType) &&
+            (identical(other.isLoading, isLoading) ||
+                other.isLoading == isLoading) &&
+            (identical(other.isSending, isSending) ||
+                other.isSending == isSending));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, id, isSending, singalType);
+  int get hashCode =>
+      Object.hash(runtimeType, id, singalType, isLoading, isSending);
 
   @JsonKey(ignore: true)
   @override
@@ -509,15 +530,18 @@ class _$_HidingState implements _HidingState {
 abstract class _HidingState implements HidingState {
   const factory _HidingState(
       {required final String id,
-      required final bool isSending,
-      required final SingalType singalType}) = _$_HidingState;
+      required final SingalType singalType,
+      final bool isLoading,
+      final bool isSending}) = _$_HidingState;
 
   @override
   String get id;
   @override
-  bool get isSending;
-  @override
   SingalType get singalType;
+  @override
+  bool get isLoading;
+  @override
+  bool get isSending;
   @override
   @JsonKey(ignore: true)
   _$$_HidingStateCopyWith<_$_HidingState> get copyWith =>

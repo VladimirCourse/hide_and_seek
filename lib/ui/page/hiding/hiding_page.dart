@@ -92,7 +92,11 @@ class _HidingPageState extends State<HidingPage> {
                     ),
                     const SizedBox(height: 34),
                     Text(
-                      state.singalType == SingalType.audio ? 'Громкий режим' : 'Тихий режим',
+                      state.isLoading
+                          ? 'Загрузка...'
+                          : state.singalType == SingalType.audio
+                              ? 'Громкий режим'
+                              : 'Тихий режим',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 22,

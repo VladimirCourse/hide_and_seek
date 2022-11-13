@@ -6,7 +6,8 @@ enum SingalType { audio, bluetooth }
 class HidingState with _$HidingState {
   const factory HidingState({
     required String id,
-    required bool isSending,
     required SingalType singalType,
+    @Default(false) bool isLoading,
+    @Default(false) bool isSending,
   }) = _HidingState;
 }
